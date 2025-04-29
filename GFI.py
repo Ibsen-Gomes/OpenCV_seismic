@@ -11,7 +11,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
 # ------------------------------------------------------------
-# 🧩 Capítulo 2: Definição da CNN (Corrigida)
+# 🧩 Capítulo 2: Definição da CNN
 # ------------------------------------------------------------
 class CNNSeismicClassifier(nn.Module):
     def __init__(self):
@@ -107,11 +107,16 @@ plt.show()
 # A fazer:
 
 ### 0) adicionar esse projeto no GitHub adicioando um Pipeline [FEITO];
-### 1) baixar imagens do link: 
+### 1) melhorar as descrições dos códigos [FEITO];
+### 2) baixar imagens do link [FEITO]: 
 ###    https://www.kaggle.com/code/prateekvyas/seismic-classification-using-deep-learning/;
-### 2) montar o código de treinamento (para sísmica 2D segmentada em feições);
-### 3) montar o banco de dados (train, test, validation)
-#$$ 4) encaixar o código de treinamento nesse código de identificação;
+### 3) extrair o "fundo" das imagens cotendo [FEITO]:
+###    2.1) Partes retas e contínuas, laminadas da sísmica
+###    2.2) Onde não há falhas nem domos
+### 4) montar as pastas do banco de dados (train, test, validation) contendo as classes fundo, sal e falha;
+### 5) montar o código de treinamento (para sísmica 2D segmentada em feições);
+### 6) "encaixar" o código de treinamento nesse código de identificação;
+### 7) criar um main;
 
 # Linkedin:
 
