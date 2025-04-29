@@ -106,11 +106,12 @@ plt.show()
 
 # A fazer:
 
-### 0) adicionar esse projeto no GitHub adicioando um Pipeline;
-### 1) montar o código de treinamento (para sísmica 2D segmentada em feições);
-### 2) encaixar o código de treinamento nesse código de identificação;
-### 3) baixar imagens do link: https://www.kaggle.com/code/prateekvyas/seismic-classification-using-deep-learning/;
-### 4) montar o banco de dados (train, test, validation)
+### 0) adicionar esse projeto no GitHub adicioando um Pipeline [FEITO];
+### 1) baixar imagens do link: 
+###    https://www.kaggle.com/code/prateekvyas/seismic-classification-using-deep-learning/;
+### 2) montar o código de treinamento (para sísmica 2D segmentada em feições);
+### 3) montar o banco de dados (train, test, validation)
+#$$ 4) encaixar o código de treinamento nesse código de identificação;
 
 # Linkedin:
 
