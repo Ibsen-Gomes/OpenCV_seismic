@@ -1,6 +1,4 @@
-# .github/workflows/python-app.yml
-
-name: Seismic CNN Pipeline
+name: Run Geological Feature Identifier
 
 on:
   push:
@@ -9,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  run-gfi:
 
     runs-on: ubuntu-latest
 
@@ -27,6 +25,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Rodar o script de validação
+    - name: Rodar GFI.py
       run: |
-        python main.py
+        python GFI.py
