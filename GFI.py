@@ -11,26 +11,30 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
 # ------------------------------------------------------------
-# 🧩 Capítulo 2: Definição da CNN
+# 🧩 Capítulo 2: Definição da CNN (versão compatível com modelo treinado)
 # ------------------------------------------------------------
 class CNNSeismicClassifier(nn.Module):
     def __init__(self):
         super(CNNSeismicClassifier, self).__init__()
-        self.conv1 = nn.Conv2d(1, 16, 3, padding=1)
-        self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
-        self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
-        
+        self.conv1 = nn.Conv2d(1, 32, 3, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
+        self.bn3 = nn.BatchNorm2d(128)
+
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(64 * 8 * 8, 128)  # Corrigido: 8x8 após pooling
-        self.fc2 = nn.Linear(128, 3)  # 3 classes: fundo, falha, sal
+        self.dropout = nn.Dropout(0.3)
+
+        self.fc1 = nn.Linear(128 * 8 * 8, 256)
+        self.fc2 = nn.Linear(256, 3)  # 3 classes: background, fault, fold
 
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = self.pool(F.relu(self.conv3(x)))
-        
-        x = x.view(-1, 64 * 8 * 8)  # Corrigido: compatível com pooling
-        x = F.relu(self.fc1(x))
+        x = self.pool(torch.relu(self.bn1(self.conv1(x))))
+        x = self.pool(torch.relu(self.bn2(self.conv2(x))))
+        x = self.pool(torch.relu(self.bn3(self.conv3(x))))
+        x = x.view(-1, 128 * 8 * 8)
+        x = self.dropout(torch.relu(self.fc1(x)))
         x = self.fc2(x)
         return x
 
@@ -41,10 +45,13 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = CNNSeismicClassifier().to(device)
 model.eval()  # Coloca o modelo em modo avaliação
 
+model.load_state_dict(torch.load("cnn_seismic_model.pth", map_location=device))
+print("✅ Modelo carregado com sucesso!")
+
 # ------------------------------------------------------------
 # 🧩 Capítulo 4: Carregamento e pré-processamento da imagem sísmica
 # ------------------------------------------------------------
-imagem = cv2.imread('database/salt/salt_001.jpg', cv2.IMREAD_GRAYSCALE)
+imagem = cv2.imread('seismic_2D/2D_008.png', cv2.IMREAD_GRAYSCALE)
 
 # Equaliza histograma para melhorar contraste
 imagem_eq = cv2.equalizeHist(imagem)
@@ -103,21 +110,21 @@ plt.title('Detecção automática: Verde=Sal, Vermelho=Falhas')
 plt.axis('off')
 plt.show()
 
+# ------------------------------------------------------------
+# 🧩 Capítulo 8: Salvamento do resultado final
+# ------------------------------------------------------------
+import os
 
-# A fazer:
+# Garante que a pasta existe
+os.makedirs("2D_GFI_results", exist_ok=True)
 
-### 0) adicionar esse projeto no GitHub adicioando um Pipeline [FEITO];
-### 1) melhorar as descrições dos códigos [FEITO];
-### 2) baixar imagens do link [FEITO]: 
-###    https://www.kaggle.com/code/prateekvyas/seismic-classification-using-deep-learning/;
-### 3) extrair o "fundo" das imagens cotendo [FEITO]:
-###    2.1) Partes retas e contínuas, laminadas da sísmica
-###    2.2) Onde não há falhas nem domos
-### 4) montar as pastas do banco de dados (train, test, validation) contendo as classes fundo, sal e falha;
-### 5) montar o código de treinamento (para sísmica 2D segmentada em feições);
-### 6) "encaixar" o código de treinamento nesse código de identificação;
-### 7) criar um main;
+# Define nome do arquivo de saída baseado no nome da entrada
+nome_saida = os.path.basename('seismic_2D/2D_008.png').replace('.png', '_GFI.png')
 
-# Linkedin:
+# Caminho completo de saída
+caminho_saida = os.path.join("2D_GFI_results", nome_saida)
 
-### postagem falar sobre as limitações de hardware, resultados não estão perfeitos, busca da melhora...
+# Salva a imagem com os retângulos desenhados
+cv2.imwrite(caminho_saida, imagem_resultado)
+
+print(f"✅ Resultado salvo em: {caminho_saida}")
