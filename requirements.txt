@@ -3,4 +3,5 @@ opencv-python-headless
 matplotlib
 numpy
 seaborn
+torchvision
 
