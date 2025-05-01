@@ -15,8 +15,9 @@
 ###    7.1) imagens com "zoons" das falhas;
 ###    7.2) imagens "bg" variados como: lámina d'água, interfaçe do fundo do mar, entre outras feições...
 ### 8) pesquisar como deixar o modelo mais complexo[FEITO_PARCIALMENTE]...
-### 9) melhorar a captura de padrões do OpenCV;
-### 10) criar um main;
+### 9) criar arquivo model.py para hospedar o modelo;
+### 10) melhorar a captura de padrões do OpenCV;
+### 11) criar um main;
 
 ### Obs: [FEITO_PARCIALMENTE] = pode melhorar!
 # Linkedin:
