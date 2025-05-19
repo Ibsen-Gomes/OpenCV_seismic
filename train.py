@@ -10,7 +10,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 
-from model import CNNSeismicClassifier
+from model import CNNSeismicClassifierV3
 from utils import plot_loss_accuracy
 
 # ------------------------------------------------------------
@@ -39,7 +39,7 @@ val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
 # 🧩 Capítulo 3: Inicialização do modelo
 # ------------------------------------------------------------
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = CNNSeismicClassifier().to(device)
+model = CNNSeismicClassifierV3(num_classes=len(dataset.classes)).to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -96,7 +96,7 @@ for epoch in range(num_epochs):
 # ------------------------------------------------------------
 # 🧩 Capítulo 5: Salvamento e visualização
 # ------------------------------------------------------------
-torch.save(model.state_dict(), "cnn_seismic_model.pth")
+torch.save(model.state_dict(), "cnn_seismic_model_08_05.pth")
 print("✅ Modelo salvo como cnn_seismic_model.pth")
 
 plot_loss_accuracy(train_losses, val_losses, train_accuracies, val_accuracies)
