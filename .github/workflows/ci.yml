@@ -46,14 +46,14 @@ jobs:
 
       # 📤 Salva o modelo treinado como artifact
       - name: Upload do modelo treinado
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v4
         with:
           name: modelo-treinado
           path: cnn_seismic_model_30_05.pth
 
   # 🔍 JOB 2: Aplicação do modelo treinado com GFD.py
   run-gfd:
-    name: Rodar GFD (inference.py)
+    name: Rodar GFD (GFD.py)
     needs: train-model  # ➕ Executa somente após o job de treino
     runs-on: ubuntu-latest
 
@@ -79,7 +79,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: modelo-treinado
-          path: models  # ⬅️ Pasta local onde o modelo será salvo
+          path: models
+
 
       # 🗂️ Cria diretório de saída
       - name: Criar pasta de resultados
