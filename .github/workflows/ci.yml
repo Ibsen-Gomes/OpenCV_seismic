@@ -12,46 +12,81 @@ on:
   pull_request:
     branches: [main]
 
-# 📦 Definição do job principal da pipeline
+# 📦 Definição dos jobs da pipeline (executados em sequência)
 jobs:
-  run-gfi:
-    # 🖥️ Ambiente onde o job será executado
-    runs-on: ubuntu-latest  # Sistema Ubuntu mais recente, preparado pelo GitHub
 
-    # 🔁 Etapas do pipeline (executadas em ordem)
+  # 🔧 JOB 1: Treinamento do modelo com train.py
+  train-model:
+    name: Treinar modelo CNN (train.py)
+    runs-on: ubuntu-latest  # Sistema Ubuntu mais recente
+
     steps:
+      # 📥 Clona o repositório para a máquina virtual do GitHub
+      - name: Clonar repositório
+        uses: actions/checkout@v3
 
-    # 📥 Etapa 1: Clona o repositório para a máquina virtual do GitHub
-    - name: Clonar repositório
-      uses: actions/checkout@v3
+      # 🐍 Configura o ambiente Python
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    # 🐍 Etapa 2: Configura o ambiente Python
-    # Instala a versão 3.10 do Python para o restante do workflow
-    - name: Configurar Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      # 📦 Instala as dependências do projeto
+      # requirements.txt deve conter torch, torchvision, opencv-python, matplotlib etc.
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    # 📦 Etapa 3: Instala todas as dependências necessárias
-    # O arquivo requirements.txt deve conter:
-    # - torch
-    # - torchvision
-    # - opencv-python
-    # - matplotlib
-    # - seaborn
-    - name: Instalar dependências
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      # 🧠 Executa o script de treinamento
+      # Espera-se que crie um arquivo como "cnn_seismic_model.pth"
+      - name: Treinar modelo com train.py
+        run: |
+          python train.py
 
-    # 🧠 Etapa 4: Executa o script de treinamento
-    # Essa etapa cria o modelo treinado "cnn_seismic_model.pth"
-    - name: Treinar modelo com train.py
-      run: |
-        python train.py
+      # 📤 Salva o modelo treinado como artifact
+      - name: Upload do modelo treinado
+        uses: actions/upload-artifact@v3
+        with:
+          name: modelo-treinado
+          path: cnn_seismic_model_30_05.pth
 
-    # 🔍 Etapa 5: Executa a inferência com GFI.py
-    # Usa OpenCV para detectar regiões e a CNN para classificar falha/dobra/fundo
-    - name: Rodar identificador geológico com GFD.py
-      run: |
-        python GFD.py
+  # 🔍 JOB 2: Aplicação do modelo treinado com GFD.py
+  run-gfd:
+    name: Rodar GFD (inference.py)
+    needs: train-model  # ➕ Executa somente após o job de treino
+    runs-on: ubuntu-latest
+
+    steps:
+      # 📥 Clona o repositório
+      - name: Clonar repositório
+        uses: actions/checkout@v3
+
+      # 🐍 Configura o Python
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # 📦 Instala dependências novamente
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 📥 Baixa o modelo treinado do job anterior
+      - name: Baixar modelo treinado
+        uses: actions/download-artifact@v3
+        with:
+          name: modelo-treinado
+          path: models  # ⬅️ Pasta local onde o modelo será salvo
+
+      # 🗂️ Cria diretório de saída
+      - name: Criar pasta de resultados
+        run: |
+          mkdir -p GFD_results/window
+
+      # 🚀 Executa a inferência com o script GFD.py
+      - name: Rodar identificador geológico com GFD.py
+        run: |
+          python GFD.py --image_path seismic_2D/2D_002_3.png --model_path models/cnn_seismic_model_30_05.pth --save_dir GFD_results/window
