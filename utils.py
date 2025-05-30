@@ -16,7 +16,7 @@ def plot_loss_accuracy(train_losses, val_losses, train_acc, val_acc):
     plt.ylabel('Loss')
     plt.legend()
     plt.tight_layout()
-    plt.savefig("2D_GFI_results/loss_curve.png", dpi=300)
+    plt.savefig("GFD_results/loss_curve.png", dpi=300)
     plt.show()
 
     plt.figure(figsize=(10, 6))
@@ -27,5 +27,5 @@ def plot_loss_accuracy(train_losses, val_losses, train_acc, val_acc):
     plt.ylabel('Accuracy (%)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig("2D_GFI_results/accuracy_curve.png", dpi=300)
+    plt.savefig("GFD_results/accuracy_curve.png", dpi=300)
     plt.show()

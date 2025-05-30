@@ -49,7 +49,8 @@
             addWeighted,
             cvtColor,
             graycoprops
-### 11) criar um main;
+### 11) Terminar o pre_processing;
+### 12) criar um main;
 
 ### Obs: [FEITO_PARCIALMENTE] = pode melhorar!
 

@@ -24,9 +24,9 @@ class SpatialAttention(nn.Module):
         attn = torch.sigmoid(self.conv(torch.cat([avg_out, max_out], dim=1)))
         return x * attn
 
-class CNNSeismicClassifierV3(nn.Module):
+class CNNSeismicClassifierV4(nn.Module):
     def __init__(self, num_classes=3):
-        super(CNNSeismicClassifierV3, self).__init__()
+        super(CNNSeismicClassifierV4, self).__init__()
 
         self.encoder = nn.Sequential(
             SeismicBlock(1, 32),
