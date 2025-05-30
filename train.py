@@ -52,7 +52,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=1e-5)
 # ------------------------------------------------------------
 # 🧩 Capítulo 4: Loop de treinamento
 # ------------------------------------------------------------
-num_epochs = 500
+num_epochs = 300
 train_losses, val_losses = [], []
 train_accuracies, val_accuracies = [], []
 
