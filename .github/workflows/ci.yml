@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: modelo-treinado
-          path: cnn_seismic_model_30_05.pth
+          path: models_pth/cnn_seismic_model_06_05.pth
 
   # 🔍 JOB 2: Aplicação do modelo treinado com GFD.py
   run-gfd:
@@ -85,9 +85,9 @@ jobs:
       # 🗂️ Cria diretório de saída
       - name: Criar pasta de resultados
         run: |
-          mkdir -p GFD_results/window
+          mkdir -p GFD_results/seismic_results
 
       # 🚀 Executa a inferência com o script GFD.py
       - name: Rodar identificador geológico com GFD.py
         run: |
-          python GFD.py --image_path seismic_2D/2D_002_3.png --model_path models/cnn_seismic_model_30_05.pth --save_dir GFD_results/window
+          python GFD.py --image_path seismic_2D/2D_011_2.png --model_path models_pth/cnn_seismic_model_06_05.pth --save_dir GFD_results/seismic_results
