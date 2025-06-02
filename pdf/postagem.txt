@@ -1,0 +1,31 @@
+Identificar estruturas como domos de sal e falhas em sísmicas 2D é uma tarefa essencial, porém repetitiva e demorada. Essa etapa é fundamental para reduzir riscos em projetos de exploração, mas exige uma análise visual minuciosa que impõe alta carga cognitiva ao intérprete humano. Para automatizar e acelerar esse processo, decidi aplicar técnicas de deep learning voltadas à interpretação geológica.
+
+Treinei uma rede neural convolucional (CNN) utilizando pequenos recortes rotulados de imagens sísmicas — os patches — contendo exemplos de três categorias: falhas, domos de sal e fundo. A rede foi capaz de aprender padrões visuais específicos de cada feição, estabelecendo uma base de conhecimento extraída diretamente dos dados. Após o treinamento, implementei uma abordagem de inferência baseada em janelas deslizantes multiescala, capaz de percorrer novas imagens e estimar, pixel a pixel, a probabilidade de presença dessas estruturas.
+
+Durante a análise dos resultados, observei que os valores absolutos de probabilidade previstos para domos de sal tendiam a ser mais baixos do que os das falhas, mesmo quando os padrões visuais estavam claramente presentes. Ainda não está claro se essa diferença reflete de fato a distribuição real das feições na seção sísmica ou se é consequência de limitações do conjunto de dados artesanal utilizado no treinamento — como possíveis desequilíbrios na quantidade e na representatividade dos exemplos. Para contornar esse desafio e tornar a visualização mais justa entre as classes, adotei uma estratégia baseada em percentis, destacando apenas os 10% de pixels com os maiores escores para cada classe, gerando os mapas de calor presente na (Figura 1). 
+
+Figura 1 - Mapas de calor com Relative Likelihood para domos de sal e falhas.
+
+Essa abordagem de Relative Likelihood permite representar de forma mais equilibrada as diferentes feições geológicas nos mapas gerados, independentemente dos valores absolutos de probabilidade. Esses mapas de Relative Likelihood são visualizados como heatmaps coloridos, sobrepostos à imagem sísmica original (Figura 2). 
+
+Figura 2 - Sobreposição dos mapas de calor com a sísmica 2D.
+
+Para torná-los ainda mais úteis, utilizei técnicas do OpenCV para extrair contornos e desenhar bounding boxes ao redor das regiões mais prováveis (Figura 3), facilitando a identificação visual das feições. O resultado é uma ferramenta interativa, automatizada e precisa, que pode apoiar geocientistas na priorização de áreas de interesse, reduzindo o esforço manual e aumentando a consistência da interpretação.
+
+Figura 3 - Bounding boxes e sísmica 2D.
+
+Desenvolvido inteiramente com Python, PyTorch e OpenCV, esse pipeline oferece uma alternativa acessível e eficiente para a detecção de feições geológicas em sísmicas 2D, demonstrando como a inteligência artificial pode agregar valor prático à análise geológica.
+
+### tenho ideias para melhora a abordagem... banco de dados mais robusto, atributos sísmicos...
+
+#Python
+#PyTorch
+#CNN
+#OpenCV
+#Deep Learning
+#Seismic data
+#Seismic Interpretation
+#Campus Basin
+#Geology
+#Geophysics
+

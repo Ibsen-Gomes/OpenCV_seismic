@@ -172,7 +172,7 @@ def sliding_window_classification(img, model, device, window_sizes=[4, 8, 16, 32
 # ------------------------------------------------------------
 # 🏁 Função principal: pipeline completa
 # ------------------------------------------------------------
-def run_full_inference(image_path, model_path, save_dir, threshold=90):
+def run_full_inference(image_path, model_path, save_dir, threshold=87):
     """Pipeline completo de inferência:
     1. Carrega imagem e modelo
     2. Gera heatmaps
@@ -228,7 +228,7 @@ def run_full_inference(image_path, model_path, save_dir, threshold=90):
     # Salva heatmaps com matplotlib
     plt.figure(figsize=(10, 4))
     plt.imshow(fault_map, cmap='hot', vmin=0, vmax=1)
-    plt.colorbar(label='Probability of presence of faults')
+    plt.colorbar(label=' Relative Likelihood of faults')
     plt.title('Heatmap - Faults')
     plt.axis('off')
     plt.tight_layout()
@@ -237,7 +237,7 @@ def run_full_inference(image_path, model_path, save_dir, threshold=90):
 
     plt.figure(figsize=(10, 4))
     plt.imshow(salt_map, cmap='Greens', vmin=0, vmax=1)
-    plt.colorbar(label='Probability of presence of salt domes') 
+    plt.colorbar(label=' Relative Likelihood of salt domes') 
     plt.title('Heatmap - Salt')
     plt.axis('off')
     plt.tight_layout()
@@ -255,11 +255,15 @@ def run_full_inference(image_path, model_path, save_dir, threshold=90):
     # -----------------------------------------
     # 🔥 Sobreposição do heatmap de falha
     # -----------------------------------------
+    # 🔥 Sobreposição do heatmap de falha (baseado apenas em máscara)
+    #masked_fault = np.where(mask_fault == 255, fault_map, np.nan)
+
     plt.figure(figsize=(10, 4))
     plt.imshow(img, cmap='gray', interpolation='none')
-    plt.imshow(fault_map, cmap='hot', alpha=0.5, vmin=0, vmax=1)
-    plt.colorbar(label='Probability of presence of faults')
-    plt.title('Seismic with Fault Heatmap')
+    plt.imshow(fault_map, cmap='hot', alpha=0.4, vmin=0, vmax=1)  # só regiões válidas aparecem
+
+    plt.colorbar(label='Relative Likelihood of faults')
+    plt.title('Faults Detection – Relative Likelihood Overlay on Seismic')
     plt.axis('off')
     plt.tight_layout()
     plt.savefig(f"{save_dir}/overlay_fault.png", dpi=300)
@@ -268,11 +272,15 @@ def run_full_inference(image_path, model_path, save_dir, threshold=90):
     # -----------------------------------------
     # 🟢 Sobreposição do heatmap de sal
     # -----------------------------------------
+    # 🟢 Sobreposição do heatmap de sal (baseado apenas em máscara)
+    #masked_salt = np.where(mask_salt == 255, salt_map, np.nan)
+
     plt.figure(figsize=(10, 4))
     plt.imshow(img, cmap='gray', interpolation='none')
-    plt.imshow(salt_map, cmap='Greens', alpha=0.5, vmin=0, vmax=1)
-    plt.colorbar(label='Probability of presence of salt domes')
-    plt.title('Seismic with Salt Heatmap')
+    plt.imshow(salt_map, cmap='Greens', alpha=0.4, vmin=0, vmax=1)  # apenas domos de sal
+
+    plt.colorbar(label='Relative Likelihood of salt domes')
+    plt.title('Salt Dome Detection – Relative Likelihood Overlay on Seismic')
     plt.axis('off')
     plt.tight_layout()
     plt.savefig(f"{save_dir}/overlay_salt.png", dpi=300)
@@ -282,9 +290,9 @@ def run_full_inference(image_path, model_path, save_dir, threshold=90):
 # ▶️ EXECUTA A INFERÊNCIA COM IMAGEM E MODELO ESPECÍFICO
 # ------------------------------------------------------------
 run_full_inference(
-    image_path='seismic_2D/2D_002_3.png',
-    model_path='cnn_seismic_model_06_05.pth',
-    save_dir='GFD_results/window'
+    image_path='seismic_2D/2D_011_2.png',
+    model_path='models_pth/cnn_seismic_model_06_05.pth',
+    save_dir='GFD_results/seismic_results'
 )
 
 # Fim da contagem

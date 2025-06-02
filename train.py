@@ -102,7 +102,7 @@ for epoch in range(num_epochs):
 # ------------------------------------------------------------
 # 🧩 Capítulo 5: Salvamento e visualização
 # ------------------------------------------------------------
-torch.save(model.state_dict(), "cnn_seismic_model_30_05.pth")
+torch.save(model.state_dict(), "models_pth/cnn_seismic_model_30_05.pth")
 print("✅ Modelo salvo como cnn_seismic_model_30_05.pth")
 
 plot_loss_accuracy(train_losses, val_losses, train_accuracies, val_accuracies)

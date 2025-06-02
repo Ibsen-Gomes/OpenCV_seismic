@@ -137,3 +137,6 @@ plt.imshow(texture_map, cmap='gray')
 plt.title("Mapa de Textura")
 plt.axis("off")
 plt.savefig('2D_GFI_results/texture_results.png', dpi=300, bbox_inches='tight')
+
+
+"Domos de sal tendem a estar associados a zonas de falhamento na sobrecarga superior ou em áreas marginais — logo, padrões verticais de alta curvatura seguidos por fraturas no topo são indícios úteis para segmentação automática."
